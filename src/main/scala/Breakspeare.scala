@@ -5,27 +5,30 @@ object Breakspeare {
   type EnvironmentTable = mutable.Map[String, FuzzySet[Any]]
 
   // Scope management using a stack
-  private var environmentStack: List[EnvironmentTable] = List(mutable.Map())
+  private val initialEnvironment: EnvironmentTable = mutable.Map()
+  private val environmentStack: List[EnvironmentTable] = List(initialEnvironment)
+
+
+  def initializeStack(): List[EnvironmentTable] = List(mutable.Map[String, FuzzySet[Any]]())
+
 
   // Scope functionality
-  def enterScope(): Unit = {
-    environmentStack = mutable.Map[String, FuzzySet[Any]]() :: environmentStack
-    println(s"Entered scope. Stack size: ${environmentStack.size}")
+  def enterScope(stack: List[EnvironmentTable]): List[EnvironmentTable] = {
+    mutable.Map[String, FuzzySet[Any]]() :: stack
   }
 
-  def exitScope(): Unit = {
-    environmentStack match {
-      case head :: tail =>
-        environmentStack = tail
-        println(s"Exited scope. Stack size: ${environmentStack.size}")
+  def exitScope(stack: List[EnvironmentTable]): List[EnvironmentTable] = {
+    stack match {
+      case _ :: tail => tail
       case Nil => throw new IllegalStateException("ScopeOutOfBounds")
     }
   }
 
   // Assign a fuzzy set to the current scope's environment
-  def assign[T](name: String, fuzzySet: FuzzySet[T]): Unit = {
-    environmentStack.head(name) = fuzzySet.asInstanceOf[FuzzySet[Any]]
-    println(s"Assigned variable '$name' in current scope. Current scope: ${environmentStack.head}")
+  def assign[T](name: String, fuzzySet: FuzzySet[T], stack: List[EnvironmentTable]): List[EnvironmentTable] = {
+    val currentScope = stack.head
+    currentScope(name) = fuzzySet.asInstanceOf[FuzzySet[Any]]
+    stack
   }
 
   def createFuzzySet[T](membershipFunction: T => Double): FuzzySet[T] = {
@@ -40,13 +43,13 @@ object Breakspeare {
   // Real assign functionality
   case class Assign[T](name: String, fuzzySet: FuzzySet[T])
 
-  def assignGate[T](assign_gate: Assign[T]): Unit = {
-    this.assign(assign_gate.name, assign_gate.fuzzySet)
+  def assignGate[T](assign_gate: Assign[T], stack: List[EnvironmentTable]): List[EnvironmentTable] = {
+    assign(assign_gate.name, assign_gate.fuzzySet, stack)
   }
 
   // Retrieve a fuzzy set from the current scope's environment
-  def get(name: String): FuzzySet[Any] = {
-    environmentStack.head.get(name) match {
+  def get(name: String, stack: List[EnvironmentTable]): FuzzySet[Any] = {
+    stack.head.get(name) match {
       case Some(fuzzySet) => fuzzySet
       case None => throw new IllegalArgumentException(s"Variable '$name' not found in the current scope.")
     }

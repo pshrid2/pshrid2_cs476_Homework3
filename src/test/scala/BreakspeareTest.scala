@@ -11,14 +11,17 @@ class BreakspeareTest extends AnyFlatSpec {
   }
 
   "assignGate" should "store and retrieve a FuzzySet in the environment" in {
-    enterScope()
-    val fuzzySet: FuzzySet[Double] = createFuzzySet[Double]((x: Double) => if (x > 25) 1.0 else 0.0)
-    assignGate(Assign("temperature", fuzzySet))
+    var stack = initializeStack()
+    stack = enterScope(stack)
 
-    val retrievedSet = get("temperature").asInstanceOf[FuzzySet[Double]]
+    val fuzzySet: FuzzySet[Double] = createFuzzySet[Double]((x: Double) => if (x > 25) 1.0 else 0.0)
+    stack = assignGate(Assign("temperature", fuzzySet), stack)
+
+    val retrievedSet = get("temperature", stack).asInstanceOf[FuzzySet[Double]]
     assert(retrievedSet.membership(30.0) == 1.0)
     assert(retrievedSet.membership(20.0) == 0.0)
-    exitScope()
+
+    stack = exitScope(stack)
   }
 
   "combine" should "perform Union operation correctly with Double" in {
@@ -38,34 +41,37 @@ class BreakspeareTest extends AnyFlatSpec {
   }
 
   "Nested scope" should "isolate variables correctly" in {
+    var stack = Breakspeare.initializeStack() // Initialize the stack
+
     // Enter the outer scope
-    enterScope()
+    stack = enterScope(stack)
     val outerFuzzySet = createFuzzySet((x: Double) => if (x > 25) 1.0 else 0.0)
-    assignGate(Assign("temperature", outerFuzzySet))
+    stack = assignGate(Assign("temperature", outerFuzzySet), stack)
 
     // Enter the inner scope
-    enterScope()
+    stack = enterScope(stack)
     val innerFuzzySet = createFuzzySet((x: Double) => if (x < 10) 1.0 else 0.0)
-    assignGate(Assign("temperature", innerFuzzySet))
+    stack = assignGate(Assign("temperature", innerFuzzySet), stack)
 
     // Retrieve the fuzzy set in the inner scope
-    val retrievedInnerSet = get("temperature").asInstanceOf[FuzzySet[Double]]
+    val retrievedInnerSet = get("temperature", stack).asInstanceOf[FuzzySet[Double]]
     println(s"Inner scope 'temperature' membership for 5.0: ${retrievedInnerSet.membership(5.0)}")
     assert(retrievedInnerSet.membership(5.0) == 1.0)  // Should be inner scope set
     assert(retrievedInnerSet.membership(30.0) == 0.0)
 
     // Exit the inner scope
-    exitScope()
+    stack = exitScope(stack)
 
     // Retrieve the fuzzy set in the outer scope
-    val retrievedOuterSet = get("temperature").asInstanceOf[FuzzySet[Double]]
+    val retrievedOuterSet = get("temperature", stack).asInstanceOf[FuzzySet[Double]]
     println(s"Outer scope 'temperature' membership for 30.0: ${retrievedOuterSet.membership(30.0)}")
     assert(retrievedOuterSet.membership(30.0) == 1.0) // Should be outer scope set
     assert(retrievedOuterSet.membership(20.0) == 0.0)
 
     // Exit the outer scope
-    exitScope()
+    stack = exitScope(stack)
   }
+
 
   "De Morgan's laws" should "hold for fuzzy sets" in {
     // Create two fuzzy sets

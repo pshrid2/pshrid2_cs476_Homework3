@@ -1,0 +1,71 @@
+# IntelliJ IDEA specific files
+.idea/
+*.iml
+*.iws
+
+# Project-specific settings
+target/
+project/target/
+project/project/
+.idea_modules/
+
+# Binaries and logs
+*.log
+*.class
+*.jar
+*.war
+*.ear
+
+# Build tools
+.metals/
+.bloop/
+.cache/
+.sbt/
+.history/
+build/
+dist/
+
+# sbt specific files
+lib_managed/
+src_managed/
+project/boot/
+project/plugins/project/
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Miscellaneous
+*.bak
+*.swp
+*~
+*.tmp
+*.rspec
+
+# Scala Test reports
+test-reports/
+
+# Maven / Gradle (if applicable)
+.settings/
+target/
+out/
+.gradle/
+build/
+
+# VS Code (if applicable)
+.vscode/
+
+# ScalaDoc
+site/
+
+# Logs and temporary files
+*.tmp
+*.temp
+*.pid
+*.seed
+
+# MacOS specific
+._*
+
+# Lock files
+package-lock.json
