@@ -1,0 +1,102 @@
+[0m[[0m[31merror[0m] [0m[0m/Users/pranavshridhar/Desktop/476RetardedShit/Homework3/src/test/scala/BreakspeareTest/scala.java:1:42: ';' expected[0m
+[0m[[0m[31merror[0m] [0m[0m/Users/pranavshridhar/Desktop/476RetardedShit/Homework3/src/test/scala/BreakspeareTest/scala.java:3:20: underscore not allowed here[0m
+[0m[[0m[31merror[0m] [0m[0m/Users/pranavshridhar/Desktop/476RetardedShit/Homework3/src/test/scala/BreakspeareTest/scala.java:3:21: ';' expected[0m
+[0m[[0m[31merror[0m] [0m[0m/Users/pranavshridhar/Desktop/476RetardedShit/Homework3/src/test/scala/BreakspeareTest/scala.java:7:3: illegal start of type[0m
+[0m[[0m[31merror[0m] [0m[0m/Users/pranavshridhar/Desktop/476RetardedShit/Homework3/src/test/scala/BreakspeareTest/scala.java:7:26: <identifier> expected[0m
+[0m[[0m[31merror[0m] [0m[0m/Users/pranavshridhar/Desktop/476RetardedShit/Homework3/src/test/scala/BreakspeareTest/scala.java:7:58: <identifier> expected[0m
+[0m[[0m[31merror[0m] [0m[0m/Users/pranavshridhar/Desktop/476RetardedShit/Homework3/src/test/scala/BreakspeareTest/scala.java:8:21: ';' expected[0m
+[0m[[0m[31merror[0m] [0m[0m/Users/pranavshridhar/Desktop/476RetardedShit/Homework3/src/test/scala/BreakspeareTest/scala.java:8:64: ';' expected[0m
+[0m[[0m[31merror[0m] [0m[0m/Users/pranavshridhar/Desktop/476RetardedShit/Homework3/src/test/scala/BreakspeareTest/scala.java:8:69: not a statement[0m
+[0m[[0m[31merror[0m] [0m[0m/Users/pranavshridhar/Desktop/476RetardedShit/Homework3/src/test/scala/BreakspeareTest/scala.java:8:75: ';' expected[0m
+[0m[[0m[31merror[0m] [0m[0m/Users/pranavshridhar/Desktop/476RetardedShit/Homework3/src/test/scala/BreakspeareTest/scala.java:8:93: not a statement[0m
+[0m[[0m[31merror[0m] [0m[0m/Users/pranavshridhar/Desktop/476RetardedShit/Homework3/src/test/scala/BreakspeareTest/scala.java:8:96: ';' expected[0m
+[0m[[0m[31merror[0m] [0m[0m/Users/pranavshridhar/Desktop/476RetardedShit/Homework3/src/test/scala/BreakspeareTest/scala.java:8:102: not a statement[0m
+[0m[[0m[31merror[0m] [0m[0m/Users/pranavshridhar/Desktop/476RetardedShit/Homework3/src/test/scala/BreakspeareTest/scala.java:8:105: ';' expected[0m
+[0m[[0m[31merror[0m] [0m[0m/Users/pranavshridhar/Desktop/476RetardedShit/Homework3/src/test/scala/BreakspeareTest/scala.java:9:48: ';' expected[0m
+[0m[[0m[31merror[0m] [0m[0m/Users/pranavshridhar/Desktop/476RetardedShit/Homework3/src/test/scala/BreakspeareTest/scala.java:10:48: ';' expected[0m
+[0m[[0m[31merror[0m] [0m[0m/Users/pranavshridhar/Desktop/476RetardedShit/Homework3/src/test/scala/BreakspeareTest/scala.java:13:3: illegal start of type[0m
+[0m[[0m[31merror[0m] [0m[0m/Users/pranavshridhar/Desktop/476RetardedShit/Homework3/src/test/scala/BreakspeareTest/scala.java:13:22: <identifier> expected[0m
+[0m[[0m[31merror[0m] [0m[0m/Users/pranavshridhar/Desktop/476RetardedShit/Homework3/src/test/scala/BreakspeareTest/scala.java:13:76: <identifier> expected[0m
+[0m[[0m[31merror[0m] [0m[0m/Users/pranavshridhar/Desktop/476RetardedShit/Homework3/src/test/scala/BreakspeareTest/scala.java:14:21: ';' expected[0m
+[0m[[0m[31merror[0m] [0m[0m/Users/pranavshridhar/Desktop/476RetardedShit/Homework3/src/test/scala/BreakspeareTest/scala.java:15:21: ';' expected[0m
+[0m[[0m[31merror[0m] [0m[0m/Users/pranavshridhar/Desktop/476RetardedShit/Homework3/src/test/scala/BreakspeareTest/scala.java:15:64: ';' expected[0m
+[0m[[0m[31merror[0m] [0m[0m/Users/pranavshridhar/Desktop/476RetardedShit/Homework3/src/test/scala/BreakspeareTest/scala.java:15:69: not a statement[0m
+[0m[[0m[31merror[0m] [0m[0m/Users/pranavshridhar/Desktop/476RetardedShit/Homework3/src/test/scala/BreakspeareTest/scala.java:15:75: ';' expected[0m
+[0m[[0m[31merror[0m] [0m[0m/Users/pranavshridhar/Desktop/476RetardedShit/Homework3/src/test/scala/BreakspeareTest/scala.java:15:92: not a statement[0m
+[0m[[0m[31merror[0m] [0m[0m/Users/pranavshridhar/Desktop/476RetardedShit/Homework3/src/test/scala/BreakspeareTest/scala.java:15:95: ';' expected[0m
+[0m[[0m[31merror[0m] [0m[0m/Users/pranavshridhar/Desktop/476RetardedShit/Homework3/src/test/scala/BreakspeareTest/scala.java:15:101: not a statement[0m
+[0m[[0m[31merror[0m] [0m[0m/Users/pranavshridhar/Desktop/476RetardedShit/Homework3/src/test/scala/BreakspeareTest/scala.java:15:104: ';' expected[0m
+[0m[[0m[31merror[0m] [0m[0m/Users/pranavshridhar/Desktop/476RetardedShit/Homework3/src/test/scala/BreakspeareTest/scala.java:16:52: ';' expected[0m
+[0m[[0m[31merror[0m] [0m[0m/Users/pranavshridhar/Desktop/476RetardedShit/Homework3/src/test/scala/BreakspeareTest/scala.java:18:77: ';' expected[0m
+[0m[[0m[31merror[0m] [0m[0m/Users/pranavshridhar/Desktop/476RetardedShit/Homework3/src/test/scala/BreakspeareTest/scala.java:19:53: ';' expected[0m
+[0m[[0m[31merror[0m] [0m[0m/Users/pranavshridhar/Desktop/476RetardedShit/Homework3/src/test/scala/BreakspeareTest/scala.java:20:53: ';' expected[0m
+[0m[[0m[31merror[0m] [0m[0m/Users/pranavshridhar/Desktop/476RetardedShit/Homework3/src/test/scala/BreakspeareTest/scala.java:21:20: ';' expected[0m
+[0m[[0m[31merror[0m] [0m[0m/Users/pranavshridhar/Desktop/476RetardedShit/Homework3/src/test/scala/BreakspeareTest/scala.java:24:3: illegal start of type[0m
+[0m[[0m[31merror[0m] [0m[0m/Users/pranavshridhar/Desktop/476RetardedShit/Homework3/src/test/scala/BreakspeareTest/scala.java:24:19: <identifier> expected[0m
+[0m[[0m[31merror[0m] [0m[0m/Users/pranavshridhar/Desktop/476RetardedShit/Homework3/src/test/scala/BreakspeareTest/scala.java:24:70: <identifier> expected[0m
+[0m[[0m[31merror[0m] [0m[0m/Users/pranavshridhar/Desktop/476RetardedShit/Homework3/src/test/scala/BreakspeareTest/scala.java:25:17: ';' expected[0m
+[0m[[0m[31merror[0m] [0m[0m/Users/pranavshridhar/Desktop/476RetardedShit/Homework3/src/test/scala/BreakspeareTest/scala.java:25:60: ';' expected[0m
+[0m[[0m[31merror[0m] [0m[0m/Users/pranavshridhar/Desktop/476RetardedShit/Homework3/src/test/scala/BreakspeareTest/scala.java:25:65: not a statement[0m
+[0m[[0m[31merror[0m] [0m[0m/Users/pranavshridhar/Desktop/476RetardedShit/Homework3/src/test/scala/BreakspeareTest/scala.java:25:71: ';' expected[0m
+[0m[[0m[31merror[0m] [0m[0m/Users/pranavshridhar/Desktop/476RetardedShit/Homework3/src/test/scala/BreakspeareTest/scala.java:25:89: not a statement[0m
+[0m[[0m[31merror[0m] [0m[0m/Users/pranavshridhar/Desktop/476RetardedShit/Homework3/src/test/scala/BreakspeareTest/scala.java:25:92: ';' expected[0m
+[0m[[0m[31merror[0m] [0m[0m/Users/pranavshridhar/Desktop/476RetardedShit/Homework3/src/test/scala/BreakspeareTest/scala.java:25:98: not a statement[0m
+[0m[[0m[31merror[0m] [0m[0m/Users/pranavshridhar/Desktop/476RetardedShit/Homework3/src/test/scala/BreakspeareTest/scala.java:25:101: ';' expected[0m
+[0m[[0m[31merror[0m] [0m[0m/Users/pranavshridhar/Desktop/476RetardedShit/Homework3/src/test/scala/BreakspeareTest/scala.java:26:17: ';' expected[0m
+[0m[[0m[31merror[0m] [0m[0m/Users/pranavshridhar/Desktop/476RetardedShit/Homework3/src/test/scala/BreakspeareTest/scala.java:26:60: ';' expected[0m
+[0m[[0m[31merror[0m] [0m[0m/Users/pranavshridhar/Desktop/476RetardedShit/Homework3/src/test/scala/BreakspeareTest/scala.java:26:65: not a statement[0m
+[0m[[0m[31merror[0m] [0m[0m/Users/pranavshridhar/Desktop/476RetardedShit/Homework3/src/test/scala/BreakspeareTest/scala.java:26:71: ';' expected[0m
+[0m[[0m[31merror[0m] [0m[0m/Users/pranavshridhar/Desktop/476RetardedShit/Homework3/src/test/scala/BreakspeareTest/scala.java:26:89: not a statement[0m
+[0m[[0m[31merror[0m] [0m[0m/Users/pranavshridhar/Desktop/476RetardedShit/Homework3/src/test/scala/BreakspeareTest/scala.java:26:92: ';' expected[0m
+[0m[[0m[31merror[0m] [0m[0m/Users/pranavshridhar/Desktop/476RetardedShit/Homework3/src/test/scala/BreakspeareTest/scala.java:26:98: not a statement[0m
+[0m[[0m[31merror[0m] [0m[0m/Users/pranavshridhar/Desktop/476RetardedShit/Homework3/src/test/scala/BreakspeareTest/scala.java:26:101: ';' expected[0m
+[0m[[0m[31merror[0m] [0m[0m/Users/pranavshridhar/Desktop/476RetardedShit/Homework3/src/test/scala/BreakspeareTest/scala.java:28:21: ';' expected[0m
+[0m[[0m[31merror[0m] [0m[0m/Users/pranavshridhar/Desktop/476RetardedShit/Homework3/src/test/scala/BreakspeareTest/scala.java:28:57: ';' expected[0m
+[0m[[0m[31merror[0m] [0m[0m/Users/pranavshridhar/Desktop/476RetardedShit/Homework3/src/test/scala/BreakspeareTest/scala.java:28:58: not a statement[0m
+[0m[[0m[31merror[0m] [0m[0m/Users/pranavshridhar/Desktop/476RetardedShit/Homework3/src/test/scala/BreakspeareTest/scala.java:28:62: ';' expected[0m
+[0m[[0m[31merror[0m] [0m[0m/Users/pranavshridhar/Desktop/476RetardedShit/Homework3/src/test/scala/BreakspeareTest/scala.java:28:81: not a statement[0m
+[0m[[0m[31merror[0m] [0m[0mFuzzySetOperation[0m
+[0m[[0m[31merror[0m] [0m[0m                 ^[0m
+[0m[[0m[31merror[0m] [0m[0m/Users/pranavshridhar/Desktop/476RetardedShit/Homework3/src/test/scala/BreakspeareTest/scala.java:28:87: ';' expected[0m
+[0m[[0m[31merror[0m] [0m[0m/Users/pranavshridhar/Desktop/476RetardedShit/Homework3/src/test/scala/BreakspeareTest/scala.java:28:99: ';' expected[0m
+[0m[[0m[31merror[0m] [0m[0m/Users/pranavshridhar/Desktop/476RetardedShit/Homework3/src/test/scala/BreakspeareTest/scala.java:29:48: ';' expected[0m
+[0m[[0m[31merror[0m] [0m[0m/Users/pranavshridhar/Desktop/476RetardedShit/Homework3/src/test/scala/BreakspeareTest/scala.java:30:48: ';' expected[0m
+[0m[[0m[31merror[0m] [0m[0m/Users/pranavshridhar/Desktop/476RetardedShit/Homework3/src/test/scala/BreakspeareTest/scala.java:33:3: illegal start of type[0m
+[0m[[0m[31merror[0m] [0m[0m/Users/pranavshridhar/Desktop/476RetardedShit/Homework3/src/test/scala/BreakspeareTest/scala.java:33:20: <identifier> expected[0m
+[0m[[0m[31merror[0m] [0m[0m/Users/pranavshridhar/Desktop/476RetardedShit/Homework3/src/test/scala/BreakspeareTest/scala.java:33:55: <identifier> expected[0m
+[0m[[0m[31merror[0m] [0m[0m/Users/pranavshridhar/Desktop/476RetardedShit/Homework3/src/test/scala/BreakspeareTest/scala.java:34:21: ';' expected[0m
+[0m[[0m[31merror[0m] [0m[0m/Users/pranavshridhar/Desktop/476RetardedShit/Homework3/src/test/scala/BreakspeareTest/scala.java:34:64: ';' expected[0m
+[0m[[0m[31merror[0m] [0m[0m/Users/pranavshridhar/Desktop/476RetardedShit/Homework3/src/test/scala/BreakspeareTest/scala.java:34:69: not a statement[0m
+[0m[[0m[31merror[0m] [0m[0m/Users/pranavshridhar/Desktop/476RetardedShit/Homework3/src/test/scala/BreakspeareTest/scala.java:34:75: ';' expected[0m
+[0m[[0m[31merror[0m] [0m[0m/Users/pranavshridhar/Desktop/476RetardedShit/Homework3/src/test/scala/BreakspeareTest/scala.java:34:92: not a statement[0m
+[0m[[0m[31merror[0m] [0m[0m/Users/pranavshridhar/Desktop/476RetardedShit/Homework3/src/test/scala/BreakspeareTest/scala.java:34:95: ';' expected[0m
+[0m[[0m[31merror[0m] [0m[0m/Users/pranavshridhar/Desktop/476RetardedShit/Homework3/src/test/scala/BreakspeareTest/scala.java:34:101: not a statement[0m
+[0m[[0m[31merror[0m] [0m[0m/Users/pranavshridhar/Desktop/476RetardedShit/Homework3/src/test/scala/BreakspeareTest/scala.java:34:104: ';' expected[0m
+[0m[[0m[31merror[0m] [0m[0m/Users/pranavshridhar/Desktop/476RetardedShit/Homework3/src/test/scala/BreakspeareTest/scala.java:35:21: ';' expected[0m
+[0m[[0m[31merror[0m] [0m[0m/Users/pranavshridhar/Desktop/476RetardedShit/Homework3/src/test/scala/BreakspeareTest/scala.java:35:66: ';' expected[0m
+[0m[[0m[31merror[0m] [0m[0m/Users/pranavshridhar/Desktop/476RetardedShit/Homework3/src/test/scala/BreakspeareTest/scala.java:36:19: ';' expected[0m
+[0m[[0m[31merror[0m] [0m[0m/Users/pranavshridhar/Desktop/476RetardedShit/Homework3/src/test/scala/BreakspeareTest/scala.java:36:48: ';' expected[0m
+[0m[[0m[31merror[0m] [0m[0m/Users/pranavshridhar/Desktop/476RetardedShit/Homework3/src/test/scala/BreakspeareTest/scala.java:37:30: ';' expected[0m
+[0m[[0m[31merror[0m] [0m[0m/Users/pranavshridhar/Desktop/476RetardedShit/Homework3/src/test/scala/BreakspeareTest/scala.java:40:3: illegal start of type[0m
+[0m[[0m[31merror[0m] [0m[0m/Users/pranavshridhar/Desktop/476RetardedShit/Homework3/src/test/scala/BreakspeareTest/scala.java:40:24: <identifier> expected[0m
+[0m[[0m[31merror[0m] [0m[0m/Users/pranavshridhar/Desktop/476RetardedShit/Homework3/src/test/scala/BreakspeareTest/scala.java:40:57: <identifier> expected[0m
+[0m[[0m[31merror[0m] [0m[0m/Users/pranavshridhar/Desktop/476RetardedShit/Homework3/src/test/scala/BreakspeareTest/scala.java:42:21: ';' expected[0m
+[0m[[0m[31merror[0m] [0m[0m/Users/pranavshridhar/Desktop/476RetardedShit/Homework3/src/test/scala/BreakspeareTest/scala.java:43:46: ')' expected[0m
+[0m[[0m[31merror[0m] [0m[0m/Users/pranavshridhar/Desktop/476RetardedShit/Homework3/src/test/scala/BreakspeareTest/scala.java:43:48: not a statement[0m
+[0m[[0m[31merror[0m] [0m[0m/Users/pranavshridhar/Desktop/476RetardedShit/Homework3/src/test/scala/BreakspeareTest/scala.java:43:54: ';' expected[0m
+[0m[[0m[31merror[0m] [0m[0m/Users/pranavshridhar/Desktop/476RetardedShit/Homework3/src/test/scala/BreakspeareTest/scala.java:43:71: not a statement[0m
+[0m[[0m[31merror[0m] [0m[0m/Users/pranavshridhar/Desktop/476RetardedShit/Homework3/src/test/scala/BreakspeareTest/scala.java:43:74: ';' expected[0m
+[0m[[0m[31merror[0m] [0m[0m/Users/pranavshridhar/Desktop/476RetardedShit/Homework3/src/test/scala/BreakspeareTest/scala.java:43:80: not a statement[0m
+[0m[[0m[31merror[0m] [0m[0m/Users/pranavshridhar/Desktop/476RetardedShit/Homework3/src/test/scala/BreakspeareTest/scala.java:43:83: ';' expected[0m
+[0m[[0m[31merror[0m] [0m[0m/Users/pranavshridhar/Desktop/476RetardedShit/Homework3/src/test/scala/BreakspeareTest/scala.java:44:57: ';' expected[0m
+[0m[[0m[31merror[0m] [0m[0m/Users/pranavshridhar/Desktop/476RetardedShit/Homework3/src/test/scala/BreakspeareTest/scala.java:47:21: ';' expected[0m
+[0m[[0m[31merror[0m] [0m[0m/Users/pranavshridhar/Desktop/476RetardedShit/Homework3/src/test/scala/BreakspeareTest/scala.java:48:46: ')' expected[0m
+[0m[[0m[31merror[0m] [0m[0m/Users/pranavshridhar/Desktop/476RetardedShit/Homework3/src/test/scala/BreakspeareTest/scala.java:48:48: not a statement[0m
+[0m[[0m[31merror[0m] [0m[0m/Users/pranavshridhar/Desktop/476RetardedShit/Homework3/src/test/scala/BreakspeareTest/scala.java:48:54: ';' expected[0m
+[0m[[0m[31merror[0m] [0m[0m/Users/pranavshridhar/Desktop/476RetardedShit/Homework3/src/test/scala/BreakspeareTest/scala.java:48:71: not a statement[0m
+[0m[[0m[31merror[0m] [0m[0m/Users/pranavshridhar/Desktop/476RetardedShit/Homework3/src/test/scala/BreakspeareTest/scala.java:48:74: ';' expected[0m
+[0m[[0m[31merror[0m] [0m[0m/Users/pranavshridhar/Desktop/476RetardedShit/Homework3/src/test/scala/BreakspeareTest/scala.java:48:80: not a statement[0m
+[0m[[0m[31merror[0m] [0m[0m/Users/pranavshridhar/Desktop/476RetardedShit/Homework3/src/test/scala/BreakspeareTest/scala.java:48:83: ';' expected[0m
+[0m[[0m[31merror[0m] [0m[0m/Users/pranavshridhar/Desktop/476RetardedShit/Homework3/src/test/scala/BreakspeareTest/scala.java:49:57: ';' expected[0m
+[0m[[0m[31merror[0m] [0m[0m/Users/pranavshridhar/Desktop/476RetardedShit/Homework3/src/test/scala/BreakspeareTest/scala.java:52:82: ';' expected[0m
+[0m[[0m[31merror[0m] [0m[0m/Users/pranavshridhar/Desktop/476RetardedShit/Homework3/src/test/scala/BreakspeareTest/scala.java:53:18: ')' or ',' expected[0m

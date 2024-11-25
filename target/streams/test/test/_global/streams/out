@@ -1,0 +1,21 @@
+[0m[[0m[0mdebug[0m] [0m[0mRunning TaskDef(BreakspeareTest, org.scalatest.tools.Framework$$anon$1@32be58ed, false, [SuiteSelector])[0m
+[0m[[0m[0minfo[0m] [0m[0m[32mBreakspeareTest:[0m[0m
+[0m[[0m[0minfo[0m] [0m[0m[32mcreateFuzzySet[0m[0m
+[0m[[0m[0minfo[0m] [0m[0m[32m- should work correctly with Double[0m[0m
+[0m[[0m[0minfo[0m] [0m[0m[32massignGate[0m[0m
+[0m[[0m[0minfo[0m] [0m[0m[32m- should store and retrieve a FuzzySet in the environment[0m[0m
+[0m[[0m[0minfo[0m] [0m[0m[32mcombine[0m[0m
+[0m[[0m[0minfo[0m] [0m[0m[32m- should perform Union operation correctly with Double[0m[0m
+[0m[[0m[0minfo[0m] [0m[0m[32mTestGate[0m[0m
+[0m[[0m[0minfo[0m] [0m[0m[32m- should evaluate membership correctly[0m[0m
+[0m[[0m[0minfo[0m] [0m[0m[32mNested scope[0m[0m
+[0m[[0m[0minfo[0m] [0m[0m[32m- should isolate variables correctly[0m[0m
+[0m[[0m[0minfo[0m] [0m[0m[32mDe Morgan's laws[0m[0m
+[0m[[0m[0minfo[0m] [0m[0m[32m- should hold for fuzzy sets[0m[0m
+[0m[[0m[0minfo[0m] [0m[0m[36mRun completed in 141 milliseconds.[0m[0m
+[0m[[0m[0minfo[0m] [0m[0m[36mTotal number of tests run: 6[0m[0m
+[0m[[0m[0minfo[0m] [0m[0m[36mSuites: completed 1, aborted 0[0m[0m
+[0m[[0m[0minfo[0m] [0m[0m[36mTests: succeeded 6, failed 0, canceled 0, ignored 0, pending 0[0m[0m
+[0m[[0m[0minfo[0m] [0m[0m[32mAll tests passed.[0m[0m
+[0m[[0m[0mdebug[0m] [0m[0mPassed tests:[0m
+[0m[[0m[0mdebug[0m] [0m[0m	BreakspeareTest[0m
