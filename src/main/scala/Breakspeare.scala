@@ -56,7 +56,32 @@ object Breakspeare {
   }
 
   case class TestGate[T](fuzzySet: FuzzySet[T], value: T)
+  def evaluate[T](expr: Any, context: Map[String, FuzzySet[T]] = Map.empty): Any = expr match {
+    // Handle TestGate exactly as before
+    case testGate: TestGate[T] =>
+      testGate.fuzzySet.membership(testGate.value)
+
+    // Handle Expression-based evaluation
+    case expression: Expression[FuzzySet[T]] => expression match {
+      case Value(v) => v // Return constant FuzzySet
+      case Variable(name) =>
+        // Resolve variable from the context
+        context.getOrElse(name, throw new IllegalArgumentException(s"Variable $name not found"))
+      case FuzzySetOp(operation, lhs, rhs, alpha) =>
+        // Evaluate left-hand and right-hand sides
+        val leftSet = evaluate(lhs, context).asInstanceOf[FuzzySet[T]]
+        val rightSet = rhs.map(evaluate(_, context).asInstanceOf[FuzzySet[T]])
+        // Delegate to FuzzySet.combine
+        combine(leftSet, operation, rightSet, alpha)
+    }
+
+    // If expr is neither TestGate nor Expression
+    case _ =>
+      throw new IllegalArgumentException("Unsupported input for evaluate")
+  }
+
   def evaluate[T](testGate: TestGate[T]): Double = {
     testGate.fuzzySet.membership(testGate.value)
   }
+
 }
