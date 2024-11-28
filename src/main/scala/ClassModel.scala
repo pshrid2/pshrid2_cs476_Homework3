@@ -1,9 +1,10 @@
-case class Class[T] (
-                      name: String,
-                      parent: Option[String],
-                      variables: List[ClassVar[T]],
-                      methods: List[Method[T]]
-                      )
+case class Class[T](
+                     name: String,
+                     parent: Option[String],
+                     variables: List[ClassVar[T]],
+                     methods: List[Method[T]],
+                     nestedClasses: List[Class[T]] = List.empty // Add support for nested classes
+                   )
 
 
 case class ClassVar[T](name: String)

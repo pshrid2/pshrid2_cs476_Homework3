@@ -56,13 +56,15 @@ object Breakspeare {
   }
 
   case class TestGate[T](fuzzySet: FuzzySet[T], value: T)
+
   def evaluate[T](expr: Any, context: Map[String, FuzzySet[T]] = Map.empty): Any = expr match {
     // Handle TestGate exactly as before
-    case testGate: TestGate[T] =>
+    case testGate: TestGate[T] @unchecked =>
       testGate.fuzzySet.membership(testGate.value)
 
+
     // Handle Expression-based evaluation
-    case expression: Expression[FuzzySet[T]] => expression match {
+    case expression: Expression[FuzzySet[T]] @unchecked => expression match {
       case Value(v) => v // Return constant FuzzySet
       case Variable(name) =>
         // Resolve variable from the context
@@ -83,5 +85,63 @@ object Breakspeare {
   def evaluate[T](testGate: TestGate[T]): Double = {
     testGate.fuzzySet.membership(testGate.value)
   }
+
+  def resolveMethod[T](
+                        className: String,
+                        methodName: String,
+                        classRegistry: Map[String, Class[FuzzySet[T]]]
+                      ): Method[FuzzySet[T]] = {
+    val (_, methods, _) = getClassWithInheritance(className, classRegistry)
+    methods.find(_.name == methodName) match {
+      case Some(method) => method
+      case None => throw new IllegalArgumentException(s"Method $methodName not found in $className or its parents")
+    }
+  }
+
+
+  def invokeMethod[T](
+                       className: String,
+                       instance: Map[String, FuzzySet[T]],
+                       methodName: String,
+                       args: Map[String, FuzzySet[T]],
+                       classRegistry: Map[String, Class[FuzzySet[T]]] // Expect FuzzySet[T] here
+                     ): FuzzySet[T] = {
+    val method = resolveMethod(className, methodName, classRegistry)
+    val methodContext = instance ++ args
+    evaluate(method.body, methodContext).asInstanceOf[FuzzySet[T]]
+  }
+
+
+  def getClassWithInheritance[T](
+                                  className: String,
+                                  classRegistry: Map[String, Class[FuzzySet[T]]]
+                                ): (List[ClassVar[FuzzySet[T]]], List[Method[FuzzySet[T]]], List[Class[FuzzySet[T]]]) = {
+    classRegistry.get(className) match {
+      case Some(myClass) => resolveParent(myClass, classRegistry)
+      case None => throw new IllegalArgumentException(s"Class $className not found")
+    }
+  }
+
+  def resolveParent[T](
+                        currentClass: Class[FuzzySet[T]],
+                        classRegistry: Map[String, Class[FuzzySet[T]]]
+                      ): (List[ClassVar[FuzzySet[T]]], List[Method[FuzzySet[T]]], List[Class[FuzzySet[T]]]) = {
+    currentClass.parent match {
+      case Some(parentName) =>
+        classRegistry.get(parentName) match {
+          case Some(parentClass) =>
+            val (parentVars, parentMethods, parentNestedClasses) = resolveParent(parentClass, classRegistry)
+            (
+              parentVars ++ currentClass.variables,
+              parentMethods ++ currentClass.methods,
+              parentNestedClasses ++ currentClass.nestedClasses
+            )
+          case None => throw new IllegalArgumentException(s"Parent class $parentName not found")
+        }
+      case None =>
+        (currentClass.variables, currentClass.methods, currentClass.nestedClasses)
+    }
+  }
+
 
 }
