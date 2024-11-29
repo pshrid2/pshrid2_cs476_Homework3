@@ -1,96 +1,143 @@
 import scala.collection.mutable
 
 object Breakspeare {
-  private val environment: mutable.Map[String, FuzzySet[Any]] = mutable.Map()
-  type EnvironmentTable = mutable.Map[String, FuzzySet[Any]]
+  // Generalized EnvironmentTable to support any type
+  type EnvironmentTable[T] = mutable.Map[String, Expression[T]]
 
   // Scope management using a stack
-  private val initialEnvironment: EnvironmentTable = mutable.Map()
-  private val environmentStack: List[EnvironmentTable] = List(initialEnvironment)
-
-
-  def initializeStack(): List[EnvironmentTable] = List(mutable.Map[String, FuzzySet[Any]]())
-
-
-  // Scope functionality
-  def enterScope(stack: List[EnvironmentTable]): List[EnvironmentTable] = {
-    mutable.Map[String, FuzzySet[Any]]() :: stack
-  }
-
-  def exitScope(stack: List[EnvironmentTable]): List[EnvironmentTable] = {
-    stack match {
-      case _ :: tail => tail
-      case Nil => throw new IllegalStateException("ScopeOutOfBounds")
-    }
-  }
-
-  // Assign a fuzzy set to the current scope's environment
-  def assign[T](name: String, fuzzySet: FuzzySet[T], stack: List[EnvironmentTable]): List[EnvironmentTable] = {
-    val currentScope = stack.head
-    currentScope(name) = fuzzySet.asInstanceOf[FuzzySet[Any]]
-    stack
-  }
+  private val initialEnvironment: EnvironmentTable[Any] = mutable.Map[String, Expression[Any]]()
+  private val environmentStack: List[EnvironmentTable[Any]] = List(initialEnvironment)
 
   def createFuzzySet[T](membershipFunction: T => Double): FuzzySet[T] = {
     UserDefinedFuzzySet(membershipFunction)
   }
 
-  def combine[T](setA: FuzzySet[T], operation: FuzzySetOperation, setB: Option[FuzzySet[T]], alpha: Option[Double] = None): FuzzySet[T] = {
-    CombinedFuzzySet(setA, setB, operation, alpha)
+
+  def initializeStack[T](): List[EnvironmentTable[T]] = List(mutable.Map[String, Expression[T]]())
+
+  // Scope functionality
+  def enterScope[T](stack: List[EnvironmentTable[T]]): List[EnvironmentTable[T]] =
+    mutable.Map[String, Expression[T]]() :: stack
+
+  def exitScope[T](stack: List[EnvironmentTable[T]]): List[EnvironmentTable[T]] =
+    stack match {
+      case _ :: tail => tail
+      case Nil => throw new IllegalStateException("ScopeOutOfBounds")
+    }
+
+  // Assign an expression to the current scope's environment
+  def assign[T](name: String, expression: Expression[T], stack: List[EnvironmentTable[T]]): List[EnvironmentTable[T]] = {
+    val currentScope = stack.head
+    currentScope(name) = expression
+    stack
+  }
+
+  case class Assign[T](variable: String, expression: Expression[T])
+
+  def assignGate[T](
+                     assign_gate: Assign[T],
+                     stack: List[EnvironmentTable[T]],
+                     context: Map[String, Expression[T]] = Map.empty[String, Expression[T]] // Explicit type
+                   ): List[EnvironmentTable[T]] = {
+    // Partially evaluate the expression
+    val evaluatedExpression = evaluate(assign_gate.expression, context)
+
+    val currentScope = stack.head
+    currentScope(assign_gate.variable) = evaluatedExpression
+
+    stack
   }
 
 
-  // Real assign functionality
-  case class Assign[T](name: String, fuzzySet: FuzzySet[T])
-
-  def assignGate[T](assign_gate: Assign[T], stack: List[EnvironmentTable]): List[EnvironmentTable] = {
-    assign(assign_gate.name, assign_gate.fuzzySet, stack)
-  }
-
-  // Retrieve a fuzzy set from the current scope's environment
-  def get(name: String, stack: List[EnvironmentTable]): FuzzySet[Any] = {
+  // Retrieve an expression from the current scope's environment
+  def get[T](name: String, stack: List[EnvironmentTable[T]]): Expression[T] =
     stack.head.get(name) match {
-      case Some(fuzzySet) => fuzzySet
+      case Some(expression) => expression
       case None => throw new IllegalArgumentException(s"Variable '$name' not found in the current scope.")
     }
-  }
 
-  case class TestGate[T](fuzzySet: FuzzySet[T], value: T)
-
-  def evaluate[T](expr: Any, context: Map[String, FuzzySet[T]] = Map.empty): Any = expr match {
-    // Handle TestGate exactly as before
-    case testGate: TestGate[T] @unchecked =>
-      testGate.fuzzySet.membership(testGate.value)
+  case class IFTRUE[T](condition: Expression[Boolean], thenBranch: Expression[T]) extends Expression[T]
+  case class ELSERUN[T](condition: Expression[Boolean], elseBranch: Expression[T]) extends Expression[T]
 
 
-    // Handle Expression-based evaluation
-    case expression: Expression[FuzzySet[T]] @unchecked => expression match {
-      case Value(v) => v // Return constant FuzzySet
-      case Variable(name) =>
-        // Resolve variable from the context
-        context.getOrElse(name, throw new IllegalArgumentException(s"Variable $name not found"))
-      case FuzzySetOp(operation, lhs, rhs, alpha) =>
-        // Evaluate left-hand and right-hand sides
-        val leftSet = evaluate(lhs, context).asInstanceOf[FuzzySet[T]]
-        val rightSet = rhs.map(evaluate(_, context).asInstanceOf[FuzzySet[T]])
-        // Delegate to FuzzySet.combine
-        combine(leftSet, operation, rightSet, alpha)
-    }
+  // Evaluates both fully and partially
+  def evaluate[T](expr: Expression[T], context: Map[String, Expression[T]]): Expression[T] = expr match {
+    case Value(v) =>
+      Value(v) // Already evaluated to a concrete value
 
-    // If expr is neither TestGate nor Expression
+    case Variable(name) =>
+      context.getOrElse(name, throw new IllegalArgumentException(s"Variable $name not found in context"))
+
+    case FuzzySetOp(operation, lhs, rhs, alpha) =>
+      val left = evaluate(lhs, context)
+      val right = rhs.map(evaluate(_, context))
+
+      // Simplify only if both operands are fully evaluated
+      (left, right) match {
+        case (Value(lv), Some(Value(rv))) => combineGeneric(lv, operation, Some(rv), alpha)
+        case (Value(lv), None)            => combineGeneric(lv, operation, None, alpha)
+        case _                            => FuzzySetOp(operation, left, right, alpha) // Leave partially evaluated
+      }
+
+    case IFTRUE(condition, thenBranch) =>
+      val conditionResult = evaluate(condition, context.asInstanceOf[Map[String, Expression[Boolean]]])
+      conditionResult match {
+        case Value(true)  => evaluate(thenBranch, context)
+        case Value(false) => Value(null.asInstanceOf[T]) // No else branch; return default
+        case _            => IFTRUE(conditionResult.asInstanceOf[Expression[Boolean]], thenBranch)
+      }
+
+    case ELSERUN(condition, elseBranch) =>
+      val conditionResult = evaluate(condition, context.asInstanceOf[Map[String, Expression[Boolean]]])
+      conditionResult match {
+        case Value(false) => evaluate(elseBranch, context)
+        case Value(true)  => Value(null.asInstanceOf[T]) // Else branch not run
+        case _            => ELSERUN(conditionResult.asInstanceOf[Expression[Boolean]], elseBranch)
+      }
+
+    case MembershipCondition(fuzzySet, value, threshold) =>
+      Value(fuzzySet.membership(value) > threshold)
+
     case _ =>
-      throw new IllegalArgumentException("Unsupported input for evaluate")
+      throw new UnsupportedOperationException(s"Unsupported expression: $expr")
   }
 
-  def evaluate[T](testGate: TestGate[T]): Double = {
-    testGate.fuzzySet.membership(testGate.value)
+
+
+
+
+
+  def combineGeneric[T](a: T, operation: FuzzySetOperation, b: Option[T], alpha: Option[Double]): Expression[T] = {
+    (a, b, operation) match {
+      case (a: Int, Some(b: Int), FuzzySetOperation.Addition) =>
+        Value(a + b).asInstanceOf[Expression[T]] // Wrap result in Value
+      case (a: Int, Some(b: Int), FuzzySetOperation.Multiplication) =>
+        Value(a * b).asInstanceOf[Expression[T]] // Wrap result in Value
+      case (a: Int, Some(b: Int), FuzzySetOperation.Difference) =>
+        Value(a - b).asInstanceOf[Expression[T]] // Wrap result in Value
+      case (a: FuzzySet[T], Some(b: FuzzySet[T]), _) =>
+        Value(CombinedFuzzySet(a, Some(b), operation, alpha)).asInstanceOf[Expression[T]]
+      case (a: FuzzySet[T], None, _) =>
+        Value(CombinedFuzzySet(a, None, operation, alpha)).asInstanceOf[Expression[T]]
+      case _ =>
+        throw new UnsupportedOperationException(s"Combine not supported for types: $a, $b")
+    }
   }
 
+  // TestGate evaluation (specific for FuzzySet)
+  case class TestGate[T](expression: Expression[T], value: T)
+
+  def evaluateTestGate[T](testGate: TestGate[T]): T = {
+    val evaluatedExpression = evaluate(testGate.expression, Map.empty)
+    evaluatedExpression.asInstanceOf[Value[T]].v
+  }
+
+  // Method resolution and invocation for general expressions
   def resolveMethod[T](
                         className: String,
                         methodName: String,
-                        classRegistry: Map[String, Class[FuzzySet[T]]]
-                      ): Method[FuzzySet[T]] = {
+                        classRegistry: Map[String, Class[T]]
+                      ): Method[T] = {
     val (_, methods, _) = getClassWithInheritance(className, classRegistry)
     methods.find(_.name == methodName) match {
       case Some(method) => method
@@ -98,24 +145,27 @@ object Breakspeare {
     }
   }
 
-
   def invokeMethod[T](
                        className: String,
-                       instance: Map[String, FuzzySet[T]],
+                       instance: Map[String, Expression[T]],
                        methodName: String,
-                       args: Map[String, FuzzySet[T]],
-                       classRegistry: Map[String, Class[FuzzySet[T]]] // Expect FuzzySet[T] here
-                     ): FuzzySet[T] = {
+                       args: Map[String, Expression[T]],
+                       classRegistry: Map[String, Class[T]]
+                     ): Expression[T] = {
+    // Resolve the method
     val method = resolveMethod(className, methodName, classRegistry)
-    val methodContext = instance ++ args
-    evaluate(method.body, methodContext).asInstanceOf[FuzzySet[T]]
-  }
 
+    // Merge instance variables and arguments
+    val methodContext = instance ++ args
+
+    // Evaluate the method body
+    evaluate(method.body, methodContext)
+  }
 
   def getClassWithInheritance[T](
                                   className: String,
-                                  classRegistry: Map[String, Class[FuzzySet[T]]]
-                                ): (List[ClassVar[FuzzySet[T]]], List[Method[FuzzySet[T]]], List[Class[FuzzySet[T]]]) = {
+                                  classRegistry: Map[String, Class[T]]
+                                ): (List[ClassVar[T]], List[Method[T]], List[Class[T]]) = {
     classRegistry.get(className) match {
       case Some(myClass) => resolveParent(myClass, classRegistry)
       case None => throw new IllegalArgumentException(s"Class $className not found")
@@ -123,9 +173,9 @@ object Breakspeare {
   }
 
   def resolveParent[T](
-                        currentClass: Class[FuzzySet[T]],
-                        classRegistry: Map[String, Class[FuzzySet[T]]]
-                      ): (List[ClassVar[FuzzySet[T]]], List[Method[FuzzySet[T]]], List[Class[FuzzySet[T]]]) = {
+                        currentClass: Class[T],
+                        classRegistry: Map[String, Class[T]]
+                      ): (List[ClassVar[T]], List[Method[T]], List[Class[T]]) = {
     currentClass.parent match {
       case Some(parentName) =>
         classRegistry.get(parentName) match {
@@ -142,6 +192,4 @@ object Breakspeare {
         (currentClass.variables, currentClass.methods, currentClass.nestedClasses)
     }
   }
-
-
 }

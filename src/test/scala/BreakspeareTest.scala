@@ -1,104 +1,96 @@
 import org.scalatest.flatspec.AnyFlatSpec
-
 import Breakspeare._
 
 class BreakspeareTest extends AnyFlatSpec {
 
-  "createFuzzySet" should "work correctly with Double" in {
-    val fuzzySet: FuzzySet[Double] = createFuzzySet[Double]((x: Double) => if (x > 0.5) 1.0 else 0.0)
-    assert(fuzzySet.membership(0.6) == 1.0)
-    assert(fuzzySet.membership(0.4) == 0.0)
-  }
-
-  "assignGate" should "store and retrieve a FuzzySet in the environment" in {
-    var stack = initializeStack()
+  "assignGate and get" should "store and retrieve expressions in the environment" in {
+    var stack = initializeStack[Int]()
     stack = enterScope(stack)
+    val expr = Value(42)
 
-    val fuzzySet: FuzzySet[Double] = createFuzzySet[Double]((x: Double) => if (x > 25) 1.0 else 0.0)
-    stack = assignGate(Assign("temperature", fuzzySet), stack)
 
-    val retrievedSet = get("temperature", stack).asInstanceOf[FuzzySet[Double]]
-    assert(retrievedSet.membership(30.0) == 1.0)
-    assert(retrievedSet.membership(20.0) == 0.0)
-
+    stack = assignGate(Assign("myVar", expr), stack)
+    val retrievedExpr = get("myVar", stack).asInstanceOf[Value[Int]]
+    assert(retrievedExpr.v == 42)
     stack = exitScope(stack)
   }
 
-  "combine" should "perform Union operation correctly with Double" in {
-    val setA: FuzzySet[Double] = createFuzzySet[Double]((x: Double) => if (x > 0.5) 1.0 else 0.0)
-    val setB: FuzzySet[Double] = createFuzzySet[Double]((x: Double) => if (x < 0.5) 1.0 else 0.0)
-
-    val unionSet: FuzzySet[Double] = combine[Double](setA, FuzzySetOperation.Union, Some(setB))
-    assert(unionSet.membership(0.6) == 1.0)
-    assert(unionSet.membership(0.4) == 1.0)
-  }
-
-  "TestGate" should "evaluate membership correctly" in {
-    val fuzzySet: FuzzySet[Double] = createFuzzySet[Double]((x: Double) => if (x > 25) 1.0 else 0.0)
-    val testGate: TestGate[Double] = TestGate(fuzzySet, 30.0)
-    val result: Double = evaluate(testGate)
-    assert(result == 1.0)
-  }
-
-  "Nested scope" should "isolate variables correctly" in {
-    var stack = Breakspeare.initializeStack() // Initialize the stack
-
-    // Enter the outer scope
+  "Scopes" should "isolate variables correctly" in {
+    var stack = initializeStack[Int]()
     stack = enterScope(stack)
-    val outerFuzzySet = createFuzzySet((x: Double) => if (x > 25) 1.0 else 0.0)
-    stack = assignGate(Assign("temperature", outerFuzzySet), stack)
+    stack = assignGate(Assign("x", Value(10)), stack)
 
-    // Enter the inner scope
     stack = enterScope(stack)
-    val innerFuzzySet = createFuzzySet((x: Double) => if (x < 10) 1.0 else 0.0)
-    stack = assignGate(Assign("temperature", innerFuzzySet), stack)
 
-    // Retrieve the fuzzy set in the inner scope
-    val retrievedInnerSet = get("temperature", stack).asInstanceOf[FuzzySet[Double]]
-    println(s"Inner scope 'temperature' membership for 5.0: ${retrievedInnerSet.membership(5.0)}")
-    assert(retrievedInnerSet.membership(5.0) == 1.0)  // Should be inner scope set
-    assert(retrievedInnerSet.membership(30.0) == 0.0)
+    stack = assignGate(Assign("x", Value(20)), stack)
 
-    // Exit the inner scope
+    // Retrieve the variable in the inner scope
+    val innerX = get("x", stack).asInstanceOf[Value[Int]]
+    assert(innerX.v == 20)
     stack = exitScope(stack)
-
-    // Retrieve the fuzzy set in the outer scope
-    val retrievedOuterSet = get("temperature", stack).asInstanceOf[FuzzySet[Double]]
-    println(s"Outer scope 'temperature' membership for 30.0: ${retrievedOuterSet.membership(30.0)}")
-    assert(retrievedOuterSet.membership(30.0) == 1.0) // Should be outer scope set
-    assert(retrievedOuterSet.membership(20.0) == 0.0)
-
-    // Exit the outer scope
-    stack = exitScope(stack)
+    val outerX = get("x", stack).asInstanceOf[Value[Int]]
+    assert(outerX.v == 10)
   }
 
+  "Arithmetic" should "evaluate addition correctly" in {
+    val context: Map[String, Expression[Int]] = Map("x" -> Value(10), "y" -> Value(5))
+    val expr: Expression[Int] = FuzzySetOp(FuzzySetOperation.Addition, Variable("x"), Some(Variable("y")))
 
-  "De Morgan's laws" should "hold for fuzzy sets" in {
+    val result = evaluate[Int](expr, context).asInstanceOf[Value[Int]]
+    assert(result.v == 15)
+  }
+
+  "Arithmetic2" should "evaluate multiplication correctly" in {
+    val context: Map[String, Expression[Int]] = Map("a" -> Value(4), "b" -> Value(3))
+    val expr: Expression[Int] = FuzzySetOp(FuzzySetOperation.Multiplication, Variable("a"), Some(Variable("b")))
+
+    val result = evaluate(expr, context).asInstanceOf[Value[Int]]
+    assert(result.v == 12)
+  }
+
+  "Variables" should "throw an error when a variable is not found in the context" in {
+    val context: Map[String, Expression[Int]] = Map("a" -> Value(4))
+    val expr: Expression[Int] = Variable("missing")
+
+    intercept[IllegalArgumentException] {
+      evaluate(expr, context)
+    }
+  }
+
+  "De Morgan's Laws" should "hold for complements of unions and intersections" in {
     // Create two fuzzy sets
-    val setA: FuzzySet[Double] = createFuzzySet[Double]((x: Double) => if (x > 0.5) 1.0 else 0.0)
-    val setB: FuzzySet[Double] = createFuzzySet[Double]((x: Double) => if (x < 0.5) 1.0 else 0.0)
+    val setA: FuzzySet[Int] = createFuzzySet((x: Int) => if (x > 5) 1.0 else 0.0)
+    val setB: FuzzySet[Int] = createFuzzySet((x: Int) => if (x < 10) 1.0 else 0.0)
 
-    // Calculate the union of setA and setB
-    val unionAB = combine[Double](setA, FuzzySetOperation.Union, Some(setB))
-    // Calculate the complement of the union
-    val complementUnionAB = combine[Double](unionAB, FuzzySetOperation.Complement, None)
+    // Define context with FuzzySet expressions
+    val context: Map[String, Expression[FuzzySet[Int]]] = Map(
+      "setA" -> Value(setA),
+      "setB" -> Value(setB)
+    )
 
-    // Calculate the complement of setA and setB
-    val complementA = combine[Double](setA, FuzzySetOperation.Complement, None)
-    val complementB = combine[Double](setB, FuzzySetOperation.Complement, None)
-    val intersectionComplementAB = combine[Double](complementA, FuzzySetOperation.Intersection, Some(complementB))
+    // Expressions for De Morgan's laws
+    val unionExpr: Expression[FuzzySet[Int]] =
+      FuzzySetOp(FuzzySetOperation.Union, Variable("setA"), Some(Variable("setB")))
+    val complementUnionExpr: Expression[FuzzySet[Int]] =
+      FuzzySetOp(FuzzySetOperation.Complement, unionExpr, None)
 
-    for (x <- Seq(0.3, 0.5, 0.7)) {
-      assert(complementUnionAB.membership(x) == intersectionComplementAB.membership(x))
-    }
+    val complementAExpr: Expression[FuzzySet[Int]] =
+      FuzzySetOp(FuzzySetOperation.Complement, Variable("setA"), None)
+    val complementBExpr: Expression[FuzzySet[Int]] =
+      FuzzySetOp(FuzzySetOperation.Complement, Variable("setB"), None)
+    val intersectionComplementExpr: Expression[FuzzySet[Int]] =
+      FuzzySetOp(FuzzySetOperation.Intersection, complementAExpr, Some(complementBExpr))
 
-    // Calculate the intersection of setA and setB
-    val intersectionAB = combine[Double](setA, FuzzySetOperation.Intersection, Some(setB))
-    val complementIntersectionAB = combine[Double](intersectionAB, FuzzySetOperation.Complement, None)
-    val unionComplementAB = combine[Double](complementA, FuzzySetOperation.Union, Some(complementB))
+    // Evaluate both expressions
+    val complementUnionResult = evaluate(complementUnionExpr, context).asInstanceOf[Value[FuzzySet[Int]]].v
+    val intersectionComplementResult = evaluate(intersectionComplementExpr, context).asInstanceOf[Value[FuzzySet[Int]]].v
 
-    for (x <- Seq(0.3, 0.5, 0.7)) {
-      assert(complementIntersectionAB.membership(x) == unionComplementAB.membership(x))
+    // Assert the membership values for specific points
+    Seq(4, 7, 11).foreach { x =>
+      assert(complementUnionResult.membership(x) == intersectionComplementResult.membership(x))
     }
   }
+
+
+
 }

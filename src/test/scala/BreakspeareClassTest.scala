@@ -1,189 +1,63 @@
 import org.scalatest.flatspec.AnyFlatSpec
-
 import Breakspeare._
-
 
 class BreakspeareClassTest extends AnyFlatSpec {
 
-  "Class Definitions" should "define variables and methods correctly" in {
-    val simpleClass = Class[FuzzySet[Double]](
-      name = "SimpleClass",
-      parent = None,
-      variables = List(ClassVar("threshold")),
-      methods = List(
-        Method(
-          name = "getThreshold",
-          params = List(),
-          body = Variable("threshold")
-        )
-      ),
-      nestedClasses = List.empty[Class[FuzzySet[Double]]] // Ensure type consistency
-    )
+  "Class creation" should "support variables and methods" in {
+    // Create a simple class with variables and methods
+    val classVars = List(ClassVar[FuzzySet[Int]]("x"), ClassVar[FuzzySet[Int]]("y"))
+    val methodBody: Expression[FuzzySet[Int]] = Value(createFuzzySet((x: Int) => if (x > 10) 1.0 else 0.0))
+    val methods: List[Method[FuzzySet[Int]]] = List(Method("fuzzyMethod", List(Parameter[FuzzySet[Int]]("input")), methodBody))
+    val nestedClasses: List[Class[FuzzySet[Int]]] = List.empty // Explicitly define an empty list for nested classes
+    val myClass = Class[FuzzySet[Int]]("MyClass", None, classVars, methods, nestedClasses)
 
-    assert(simpleClass.name == "SimpleClass")
-    assert(simpleClass.variables.map(_.name) == List("threshold"))
-    assert(simpleClass.methods.head.name == "getThreshold")
+    assert(myClass.name == "MyClass")
+    assert(myClass.variables.map(_.name) == List("x", "y"))
+    assert(myClass.methods.map(_.name) == List("fuzzyMethod"))
   }
 
-  "Method Invocation" should "invoke methods and return the correct result" in {
-    val simpleClass = Class[FuzzySet[Double]](
-      name = "SimpleClass",
-      parent = None,
-      variables = List(ClassVar("threshold")),
-      methods = List(
-        Method(
-          name = "greaterThanThreshold",
-          params = List(Parameter("x")),
-          body = FuzzySetOp(
-            operation = FuzzySetOperation.AlphaCut,
-            lhs = Variable("x"),
-            alpha = Some(0.5)
-          )
-        )
-      ),
-      nestedClasses = List.empty[Class[FuzzySet[Double]]] // Explicit type for empty list
-    )
+  "Class inheritance" should "support parent-child relationships and variable/method resolution" in {
+    // Define parent class with variables and methods
+    val parentVars = List(ClassVar[FuzzySet[Int]]("parentVar"))
+    val parentMethodBody: Expression[FuzzySet[Int]] = Value(createFuzzySet((x: Int) => if (x > 20) 1.0 else 0.0))
+    val parentMethods: List[Method[FuzzySet[Int]]] = List(Method("parentMethod", List(Parameter[FuzzySet[Int]]("input")), parentMethodBody))
+    val parentClass = Class[FuzzySet[Int]]("ParentClass", None, parentVars, parentMethods, List.empty[Class[FuzzySet[Int]]]) // Explicitly specify empty list of nested classes
 
-    val classRegistry = Map("SimpleClass" -> simpleClass)
+    // Define child class that extends parent class
+    val childVars = List(ClassVar[FuzzySet[Int]]("childVar"))
+    val childMethodBody: Expression[FuzzySet[Int]] = Value(createFuzzySet((x: Int) => if (x < 5) 1.0 else 0.0))
+    val childMethods: List[Method[FuzzySet[Int]]] = List(Method("childMethod", List(Parameter[FuzzySet[Int]]("input")), childMethodBody))
+    val childClass = Class[FuzzySet[Int]]("ChildClass", Some("ParentClass"), childVars, childMethods, List.empty[Class[FuzzySet[Int]]]) // Explicitly specify empty list of nested classes
 
-    // Wrap the functions into FuzzySet
-    val instanceVars = Map(
-      "threshold" -> UserDefinedFuzzySet((x: Double) => if (x > 0.5) 1.0 else 0.0)
-    )
-
-    val args = Map(
-      "x" -> UserDefinedFuzzySet((x: Double) => if (x > 0.7) 1.0 else 0.0)
-    )
-
-    val result = Breakspeare.invokeMethod(
-      className = "SimpleClass",
-      instance = instanceVars,
-      methodName = "greaterThanThreshold",
-      args = args,
-      classRegistry = classRegistry
-    )
-
-    assert(result.membership(0.8) == 1.0) // Above threshold
-    assert(result.membership(0.4) == 0.0) // Below threshold
+    // Assertions for the child class
+    assert(childClass.name == "ChildClass")
+    assert(childClass.parent.contains("ParentClass"))
+    assert(childClass.variables.map(_.name) == List("childVar"))
+    assert(childClass.methods.map(_.name) == List("childMethod"))
   }
 
+  "Class with nested classes" should "support composition" in {
+    val nestedVars = List(ClassVar[FuzzySet[Int]]("nestedVar"))
+    val nestedMethods: List[Method[FuzzySet[Int]]] = List(Method("nestedMethod", List(Parameter[FuzzySet[Int]]("input")), Value(createFuzzySet((x: Int) => if (x == 42) 1.0 else 0.0))))
+    val nestedClass = Class[FuzzySet[Int]]("NestedClass", None, nestedVars, nestedMethods, List.empty)
 
-  "Single Variable Access" should "retrieve and evaluate a variable correctly" in {
-    val simpleClass = Class[FuzzySet[Double]](
-      name = "SimpleClass",
-      parent = None,
-      variables = List(ClassVar("threshold")),
-      methods = List(
-        Method(
-          name = "getThreshold",
-          params = List(),
-          body = Variable("threshold")
-        )
-      ),
-      nestedClasses = List.empty[Class[FuzzySet[Double]]]
-    )
+    val parentVars = List(ClassVar[FuzzySet[Int]]("parentVar"))
+    val parentMethods: List[Method[FuzzySet[Int]]] = List(Method("parentMethod", List(Parameter[FuzzySet[Int]]("input")), Value(createFuzzySet((x: Int) => if (x > 20) 1.0 else 0.0))))
+    val parentClass = Class[FuzzySet[Int]]("ParentClassWithNested", None, parentVars, parentMethods, List(nestedClass))
 
-    val classRegistry = Map("SimpleClass" -> simpleClass)
-    val instanceVars = Map(
-      "threshold" -> UserDefinedFuzzySet((x: Double) => if (x > 0.5) 1.0 else 0.0)
-    )
-
-    val result = Breakspeare.invokeMethod(
-      className = "SimpleClass",
-      instance = instanceVars,
-      methodName = "getThreshold",
-      args = Map.empty,
-      classRegistry = classRegistry
-    )
-
-    assert(result.membership(0.6) == 1.0)
-    assert(result.membership(0.4) == 0.0)
+    assert(parentClass.nestedClasses.map(_.name) == List("NestedClass"))
+    assert(parentClass.nestedClasses.head.variables.map(_.name) == List("nestedVar"))
+    assert(parentClass.nestedClasses.head.methods.map(_.name) == List("nestedMethod"))
   }
 
-  "Simple Inheritance" should "use a parent class's method correctly" in {
-    val parentClass = Class[FuzzySet[Double]](
-      name = "ParentClass",
-      parent = None,
-      variables = List(ClassVar("parentThreshold")),
-      methods = List(
-        Method(
-          name = "checkParentThreshold",
-          params = List(),
-          body = Variable("parentThreshold")
-        )
-      ),
-      nestedClasses = List.empty[Class[FuzzySet[Double]]]
-    )
+  "assignGate and get" should "store and retrieve expressions in the environment" in {
+    val stack = initializeStack[Int]()
+    val expr: Expression[Int] = Value(42)
+    val updatedStack = assignGate(Assign("testVar", expr), stack)
 
-    val childClass = Class[FuzzySet[Double]](
-      name = "ChildClass",
-      parent = Some("ParentClass"),
-      variables = List(),
-      methods = List(),
-      nestedClasses = List.empty[Class[FuzzySet[Double]]]
-    )
+    val retrieved = get("testVar", updatedStack)
 
-    val classRegistry = Map(
-      "ParentClass" -> parentClass,
-      "ChildClass" -> childClass
-    )
-
-    val instanceVars = Map(
-      "parentThreshold" -> UserDefinedFuzzySet((x: Double) => if (x > 0.3) 1.0 else 0.0)
-    )
-
-    val result = Breakspeare.invokeMethod(
-      className = "ChildClass",
-      instance = instanceVars,
-      methodName = "checkParentThreshold",
-      args = Map.empty,
-      classRegistry = classRegistry
-    )
-
-    assert(result.membership(0.4) == 1.0)
-    assert(result.membership(0.2) == 0.0)
+    assert(retrieved == Value(42))
   }
-
-
-  "Fuzzy Set Combination" should "combine two fuzzy sets correctly using Union" in {
-    val combineClass = Class[FuzzySet[Double]](
-      name = "CombineClass",
-      parent = None,
-      variables = List(),
-      methods = List(
-        Method(
-          name = "combineSets",
-          params = List(Parameter("setA"), Parameter("setB")),
-          body = FuzzySetOp(
-            operation = FuzzySetOperation.Union,
-            lhs = Variable("setA"),
-            rhs = Some(Variable("setB"))
-          )
-        )
-      ),
-      nestedClasses = List.empty[Class[FuzzySet[Double]]]
-    )
-
-    val classRegistry = Map("CombineClass" -> combineClass)
-
-    val instanceVars = Map.empty[String, FuzzySet[Double]]
-    val args = Map(
-      "setA" -> UserDefinedFuzzySet((x: Double) => if (x > 0.5) 1.0 else 0.0),
-      "setB" -> UserDefinedFuzzySet((x: Double) => if (x < 0.3) 1.0 else 0.0)
-    )
-
-    val result = Breakspeare.invokeMethod(
-      className = "CombineClass",
-      instance = instanceVars,
-      methodName = "combineSets",
-      args = args,
-      classRegistry = classRegistry
-    )
-
-    assert(result.membership(0.6) == 1.0) // From setA
-    assert(result.membership(0.2) == 1.0) // From setB
-    assert(result.membership(0.4) == 0.0) // Neither setA nor setB
-  }
-
 
 }

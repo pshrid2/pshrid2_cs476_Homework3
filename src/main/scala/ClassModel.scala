@@ -17,10 +17,10 @@ case class Method[T](
 
 case class Parameter[T](name: String)
 
-sealed trait Expression[T]
+trait Expression[T]
+case class MembershipCondition[T](fuzzySet: FuzzySet[T], value: T, threshold: Double) extends Expression[Boolean]
 case class Value[T](v: T) extends Expression[T]
 case class Variable[T](name: String) extends Expression[T]
-
 case class FuzzySetOp[T](
                           operation: FuzzySetOperation,       // Operation type (from FuzzySet.scala)
                           lhs: Expression[T],                // Left-hand side operand
