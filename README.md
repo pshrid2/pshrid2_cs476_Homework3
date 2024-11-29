@@ -1,189 +1,132 @@
-# Welcome to Breakspeare
-## To be, to not be, to maybe?
+# **Welcome to Breakspeare**
+## To Be, To Not Be, To Maybe?
 ### By Pranav Shridhar
 
-Breakspeare is a domain-specific language (DSL) designed to facilitate the 
-creation, manipulation, and evaluation of fuzzy sets within the context of fuzzy 
-logic. It allows users to work with sets that have varying degrees of membership 
-rather than binary inclusion. With the addition of classes, methods, and inheritance, 
-Breakspeare now supports object-oriented programming constructs tailored for fuzzy logic applications.
+Breakspeare is an advanced domain-specific language (DSL) for designers of fuzzy logic systems. It allows users to 
+create, manipulate, and evaluate fuzzy logic expressions and simulate fuzzy logic gates. With enhanced features 
+like partial evaluation, conditional constructs, and object-oriented programming, Breakspeare provides a robust 
+framework for building and optimizing complex fuzzy logic systems.
 
 ---
 
-### **Key Features**
-1. **Fuzzy Set Creation:** Define fuzzy sets using flexible membership functions that
-determine how much an element belongs to a set. These sets are not limited to a single data type, 
-allowing for membership functions defined over any generic type. Member functions are abstract when created on their own.
+## **Key Features**
+### 1. **Fuzzy Logic Constructs**
+- **Fuzzy Sets**: Create fuzzy sets with custom membership functions that assign membership degrees to elements.
+- **Fuzzy Operations**:
+    - **Union, Intersection, and Complement**: Manipulate fuzzy sets with standard set-theoretic operations.
+    - **Addition, Multiplication, and Difference**: Perform numerical operations on fuzzy sets.
+    - **Alpha Cut**: Filter elements based on membership thresholds.
 
+### 2. **Partial Evaluation**
+- Breakspeare supports **partial evaluation**, allowing users to resolve expressions with known values while retaining unresolved variables for future evaluation.
+- **Examples**:
+  ```scala
+  Multiply(Value(3), Multiply(Add(Value(5), Value(1)), Variable("x")))
+  // Partially evaluates to:
+  Multiply(Value(3), Multiply(Value(6), Variable("x")))
+  ```
 
-2. **Scope Management:** Supports nested scoping, enabling the creation and manipulation of fuzzy sets within distinct 
-contexts. This feature ensures that variables in different scopes do not interfere with each other, maintaining data integrity across operations.
+### 3. **Conditional Expressions**
+- Implement **fuzzy conditional logic** with `IFTRUE` and `ELSERUN` constructs.
+- **Examples**:
+  ```scala
+  val condition = MembershipCondition(setA, value = 0.7, threshold = 0.5)
+  val expr = IFTRUE(condition, Value("High"), ELSERUN(condition, Value("Low")))
+  ```
 
-3. **Fuzzy Set Operations:** Breakspeare includes an extensive set of operations to manipulate fuzzy sets:
-   - Union: Combines two fuzzy sets, reflecting the maximum membership degree for each element.
-   - Intersection: Computes the minimum membership degree for elements across two sets.
-   - Complement: Calculates the negation of a fuzzy set, reversing the membership values.
-   - Addition, Multiplication, and Difference: Provides numerical manipulations of fuzzy sets for more advanced operations.
-   - Alpha Cut: Produces a crisp set that contains elements whose membership values exceed a specified threshold.
+### 4. **Object-Oriented Features**
+- **Classes**: Define reusable templates with variables, methods, and nested classes.
+- **Inheritance**: Support for parent-child relationships.
+- **Dynamic Dispatch**: Resolve methods dynamically at runtime.
+- **Method Invocation**: Evaluate class methods with arguments and variables.
 
-4. **Object-Oriented Features:**
-   - **Classes**:
-      - Define named scopes with variables, methods, and nested classes.
-      - Supports variables with flexible membership functions and methods operating on fuzzy sets.
-   - **Inheritance**:
-      - Classes can inherit methods and variables from parent classes.
-   - **Dynamic Dispatch**:
-      - Methods are resolved dynamically, supporting polymorphism.
-   - **Method Invocation**:
-      - Methods can include operations on fuzzy sets, returning results based on the class context.
-
-5. **Abstraction:** There are two kinds of FuzzySets, but thankfully you won't have to worry about any of them. 
-You need only to interact with the FuzzySet type.
-
----
-
-### **How to Start Breakspeare**
-#### Prerequisites:
-- **Scala**: Version 2.13.x or later.
-- **SBT (Simple Build Tool)**: Version 1.5.x or later.
-- **JDK (Java Development Kit)**: Version 8 or later.
-
-#### Steps:
-1. Clone the repository:
-   ```bash
-   git clone <repository-url>
-   cd <repository-folder>
-   ```
-
-2. Build and test the project:
-   ```bash
-   sbt clean compile test
-   ```
-
-3. Run the main application:
-   ```bash
-   sbt run
-   ```
-
-4. Modify `main.scala` to add your custom logic for fuzzy sets, classes, and methods:
-   ```scala
-   object Main extends App {
-     val setA = Breakspeare.createFuzzySet((x: Double) => if (x > 0.5) 1.0 else 0.0)
-     val setB = Breakspeare.createFuzzySet((x: Double) => if (x < 0.5) 1.0 else 0.0)
-
-     val unionSet = Breakspeare.combine(setA, FuzzySetOperation.Union, Some(setB))
-
-     println(s"Membership of 0.6 in Union Set: ${unionSet.membership(0.6)}")
-     println(s"Membership of 0.4 in Union Set: ${unionSet.membership(0.4)}")
-   }
-   ```
+### 5. **Scope Management**
+- Nested scopes ensure variable isolation and integrity during evaluation.
 
 ---
 
-### **How to Create and Evaluate Expressions in Breakspeare**
+## **Usage Examples**
 
-#### **1. Creating Fuzzy Sets**
-Fuzzy sets in Breakspeare are defined using custom membership functions. These functions determine the degree of membership for any given element in the set.
-
-**Example:**
+### **1. Creating and Evaluating Fuzzy Sets**
 ```scala
 val setA = createFuzzySet((x: Double) => if (x > 0.5) 1.0 else 0.0)
 val setB = createFuzzySet((x: Double) => if (x < 0.5) 1.0 else 0.0)
-```
 
-#### **2. Combining Fuzzy Sets Using Operations**
-```scala
 val unionSet = combine(setA, FuzzySetOperation.Union, Some(setB))
-val complementSet = combine(setA, FuzzySetOperation.Complement, None)
+println(unionSet.membership(0.6)) // Output: 1.0
+println(unionSet.membership(0.4)) // Output: 1.0
 ```
 
-#### **3. Assigning Fuzzy Sets to Variables**
+### **2. Partial Evaluation**
 ```scala
-enterScope()
-assignGate(Assign("temperature", setA))
+val expr = FuzzySetOp(FuzzySetOperation.Addition, Variable("x"), Some(Value(5)))
+val context = Map("x" -> Value(10))
+
+val result = evaluate(expr, context)
+// Output: Value(15)
 ```
 
-#### **4. Retrieving and Evaluating Fuzzy Sets**
+### **3. Using Conditionals**
 ```scala
-val retrievedSet = get("temperature").asInstanceOf[FuzzySet[Double]]
-val membershipValue = retrievedSet.membership(0.6)
+val condition = MembershipCondition(setA, value = 0.7, threshold = 0.5)
+val conditionalExpr = IFTRUE(condition, Value("High"), ELSERUN(condition, Value("Low")))
+
+val result = evaluate(conditionalExpr, Map.empty)
+// Output depends on the membership function of setA
 ```
 
----
-
-### **Using Object-Oriented Features**
-
-#### **1. Defining a Class**
+### **4. Defining and Using Classes**
 ```scala
-val simpleClass = Class[FuzzySet[Double]](
-  name = "SimpleClass",
+val myClass = Class[FuzzySet[Double]](
+  name = "MyClass",
   parent = None,
   variables = List(ClassVar("threshold")),
   methods = List(
     Method(
-      name = "greaterThanThreshold",
+      name = "isAboveThreshold",
       params = List(Parameter("x")),
-      body = FuzzySetOp(
-        operation = FuzzySetOperation.AlphaCut,
-        lhs = Variable("x"),
-        alpha = Some(0.5)
-      )
-    )
-  ),
-  nestedClasses = List.empty[Class[FuzzySet[Double]]]
-)
-```
-
-#### **2. Inheritance**
-```scala
-val parentClass = Class[FuzzySet[Double]](
-  name = "ParentClass",
-  parent = None,
-  variables = List(ClassVar("parentThreshold")),
-  methods = List(
-    Method(
-      name = "checkThreshold",
-      params = List(),
-      body = Variable("parentThreshold")
+      body = MembershipCondition(Variable("threshold"), Variable("x"), 0.8)
     )
   )
 )
 
-val childClass = Class[FuzzySet[Double]](
-  name = "ChildClass",
-  parent = Some("ParentClass"),
-  variables = List(),
-  methods = List(
-    Method(
-      name = "overrideMethod",
-      params = List(),
-      body = FuzzySetOp(
-        operation = FuzzySetOperation.Complement,
-        lhs = Variable("parentThreshold")
-      )
-    )
-  )
-)
-```
-
-#### **3. Method Invocation**
-```scala
 val instanceVars = Map(
-  "threshold" -> UserDefinedFuzzySet((x: Double) => if (x > 0.5) 1.0 else 0.0)
+  "threshold" -> createFuzzySet((x: Double) => if (x > 0.5) 1.0 else 0.0)
 )
 
-val args = Map(
-  "x" -> UserDefinedFuzzySet((x: Double) => if (x > 0.7) 1.0 else 0.0)
-)
-
-val result = Breakspeare.invokeMethod(
-  className = "SimpleClass",
-  instance = instanceVars,
-  methodName = "greaterThanThreshold",
-  args = args,
-  classRegistry = Map("SimpleClass" -> simpleClass)
-)
-
-assert(result.membership(0.8) == 1.0) // Above threshold
-assert(result.membership(0.4) == 0.0) // Below threshold
+val args = Map("x" -> Value(0.7))
+val result = invokeMethod("MyClass", instanceVars, "isAboveThreshold", args, Map("MyClass" -> myClass))
+println(result) // Evaluates the method with the provided arguments
 ```
+
+---
+
+## **Testing**
+
+Run the test suite with:
+```bash
+sbt test
+```
+
+### Test Coverage
+- **Partial Evaluation**: Validates simplification of expressions.
+- **Conditionals**: Ensures correct evaluation of `IFTRUE` and `ELSERUN`.
+- **Fuzzy Set Operations**: Tests for union, intersection, complement, and more.
+- **Class Functionality**: Checks variable/method resolution, inheritance, and method invocation.
+
+---
+
+## **Semantics of Partial Evaluation**
+- **Evaluation Strategy**: Known values are computed, while unresolved variables remain as placeholders.
+- **Example**:
+  ```scala
+  Add(Value(3), Multiply(Variable("x"), Value(5)))
+  // Partial Evaluation with x=2:
+  Add(Value(3), Value(10))
+  ```
+
+### Conditional Evaluation
+- **IFTRUE**: Evaluates the `thenBranch` if the condition is true.
+- **ELSERUN**: Evaluates the `elseBranch` if the condition is false.
+- Both branches can undergo partial evaluation if unresolved variables are present.
+
